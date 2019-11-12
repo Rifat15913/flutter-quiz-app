@@ -6,23 +6,35 @@ import './question.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
-
   @override
   State<StatefulWidget> createState() {
     return _MyAppState();
   }
-
 }
 
 class _MyAppState extends State<MyApp> {
   var _questionIndex = 0;
+  var questions = [
+    {
+      "questionText": "What\'s your favorite color?",
+      "answers": ["Black", "Red", "Green", "White"]
+    },
+    {
+      "questionText": "What\'s your favorite animal?",
+      "answers": ["Rabbit", "Snake", "Elephant"]
+    },
+    {
+      "questionText": "Who\'s your favorite instructor?",
+      "answers": ["Max", "Rifat"]
+    },
+  ];
 
   void _answerQuestion() {
     setState(() {
-      if (_questionIndex == 0) {
+      if (_questionIndex < questions.length - 1) {
         _questionIndex++;
       } else {
-        _questionIndex--;
+        _questionIndex = 0;
       }
     });
 
@@ -31,11 +43,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    var questions = [
-      "What\'s your favorite color?",
-      "What\'s your favorite animal? I don't know. Do you know?",
-    ];
-
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -45,11 +52,12 @@ class _MyAppState extends State<MyApp> {
         body: Column(
           children: <Widget>[
             Question(
-              questions[_questionIndex],
+              questions[_questionIndex]["questionText"],
             ),
-            Answer(_answerQuestion),
-            Answer(_answerQuestion),
-            Answer(_answerQuestion),
+            ...(questions[_questionIndex]["answers"] as List<String>)
+                .map((answer) {
+              return Answer(_answerQuestion, answer);
+            }),
           ],
         ),
       ),
